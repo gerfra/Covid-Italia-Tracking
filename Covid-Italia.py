@@ -30,7 +30,7 @@ def covidscrapy(urls,features,attr,colums):
         
     return sorted(my_list, key=itemgetter(1),reverse=True)
 
-url = r"https://services6.arcgis.com/L1SotImj1AAZY1eK/arcgis/rest/services/dpc_regioni_covid_19_new1/FeatureServer/0/query?f=json&where=1%3D1&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&=totale_casi"
+url = r"https://services6.arcgis.com/L1SotImj1AAZY1eK/arcgis/rest/services/dpc_regioni__covid_19_new2/FeatureServer/0/query?f=json&where=1%3D1&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&=totale_casi"                                
 
 db = covidscrapy(url, 
                 'features',
