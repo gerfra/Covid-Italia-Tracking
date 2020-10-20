@@ -22,15 +22,30 @@ def covidscrapy(urls,features,attr,colums):
         r2 = each[attr][colums[1]]#['totale_casi']
         r3 = each[attr][colums[2]]#['totale_positivi']
         r4 = each[attr][colums[3]]#['terapia_intensiva']
-        r5 = each[attr][colums[4]]#['deceduti']
-        r6 = each[attr][colums[5]]#['dimessi_guariti']
-        r7 = each[attr][colums[6]]#['tamponi']
+        r5 = each[attr][colums[4]]#['totale_ospedalizzati']
+        r6 = each[attr][colums[5]]#['deceduti']
+        r7 = each[attr][colums[6]]#['dimessi_guariti']
+        r8 = each[attr][colums[7]]#['tamponi']
 
-        my_list.append((r1,r2,r3,r4,r5,r6,r7))
+        my_list.append((r1,r2,r3,r4,r5,r6,r7,r8))
         
     return sorted(my_list, key=itemgetter(1),reverse=True)
 
-url = r"https://services6.arcgis.com/L1SotImj1AAZY1eK/arcgis/rest/services/dpc_regioni__covid_19_new2/FeatureServer/0/query?f=json&where=1%3D1&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&=totale_casi"                                
+params = {
+  "where":"data BETWEEN timestamp '2020-10-18 22:00:00' AND timestamp '2020-10-19 21:59:59'",
+  "returnGeometry":"false",
+  "spatialRel":"esriSpatialRelIntersects",
+  "outFields":"*",
+  "orderByFields":"totale_casi desc",
+  "outSR":"102100",
+  "resultOffset":"0",
+  "resultRecordCount":"25",
+  "resultType":"standard",
+  "cacheHint":"true"
+}
+target = "https://services6.arcgis.com/L1SotImj1AAZY1eK/arcgis/rest/services/DPC_COVID19_Regioni/FeatureServer/0/query?f=json&"
+
+url = target+urllib.parse.urlencode(params)
 
 db = covidscrapy(url, 
                 'features',
@@ -39,11 +54,12 @@ db = covidscrapy(url,
                 'totale_casi', \
                 'totale_positivi', \
                 'terapia_intensiva', \
+				'totale_ospedalizzati', \
                 'deceduti', \
                 'dimessi_guariti', \
                 'tamponi'])
 
-header = ["REGIONE","TOT CASI","TOT POSITIVI","TOT TER.INTENSIVA","TOT DECEDUTI","TOT GUARITI","TOT TAMPONI"]
+header = ["REGIONE","TOT CASI","TOT POSITIVI","TOT TER.INTENSIVA","TOT OSPEDALIZZATI","TOT DECEDUTI","TOT GUARITI","TOT TAMPONI"]
 print(tabulate(db,header,tablefmt="grid"))
 
 with open("file.txt", "w") as output:
